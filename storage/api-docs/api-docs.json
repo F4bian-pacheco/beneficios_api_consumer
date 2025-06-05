@@ -1,0 +1,191 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Beneficios Sociales",
+        "description": "API para la gestión y consulta de beneficios sociales",
+        "contact": {
+            "name": "Desarrollador API",
+            "email": "fabian.pacheco.zelada@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor de desarrollo"
+        }
+    ],
+    "paths": {
+        "/api/v1/beneficios-filtrados": {
+            "get": {
+                "tags": [
+                    "Beneficios"
+                ],
+                "summary": "Obtener lista de beneficios agrupados por año",
+                "description": "Retorna una lista de beneficios procesados, filtrados y agrupados por año en orden descendente",
+                "operationId": "getBeneficios",
+                "responses": {
+                    "200": {
+                        "description": "Lista de beneficios obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Código de estado HTTP",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "success": {
+                                            "description": "Indica si la operación fue exitosa",
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "description": "Array de beneficios agrupados por año",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "year": {
+                                                        "description": "Año de los beneficios",
+                                                        "type": "integer",
+                                                        "example": 2024
+                                                    },
+                                                    "num": {
+                                                        "description": "Número total de beneficios en el año",
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "beneficios": {
+                                                        "description": "Lista de beneficios del año",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id_programa": {
+                                                                    "description": "ID del programa del beneficio",
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "monto": {
+                                                                    "description": "Monto del beneficio",
+                                                                    "type": "number",
+                                                                    "format": "integer",
+                                                                    "example": 150000
+                                                                },
+                                                                "fecha_recepcion": {
+                                                                    "description": "Fecha de recepción del beneficio",
+                                                                    "type": "string",
+                                                                    "format": "date",
+                                                                    "example": "10/10/2025"
+                                                                },
+                                                                "fecha": {
+                                                                    "description": "Fecha del beneficio",
+                                                                    "type": "string",
+                                                                    "format": "date",
+                                                                    "example": "2023-10-10"
+                                                                },
+                                                                "ano": {
+                                                                    "description": "Año extraído de la fecha",
+                                                                    "type": "string",
+                                                                    "example": "2024"
+                                                                },
+                                                                "view": {
+                                                                    "description": "Indica si el beneficio es visible",
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                },
+                                                                "ficha": {
+                                                                    "description": "Información de la ficha asociada al beneficio",
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "description": "ID de la ficha",
+                                                                            "type": "integer",
+                                                                            "example": 10
+                                                                        },
+                                                                        "nombre": {
+                                                                            "description": "Nombre de la ficha",
+                                                                            "type": "string",
+                                                                            "example": "Subsidio Familiar (SUF)"
+                                                                        },
+                                                                        "url": {
+                                                                            "description": "url de la ficha",
+                                                                            "type": "string",
+                                                                            "example": "subsidio_familiar_suf"
+                                                                        },
+                                                                        "categoria": {
+                                                                            "description": "Categoría de la ficha",
+                                                                            "type": "string",
+                                                                            "example": "bonos"
+                                                                        },
+                                                                        "descripcion": {
+                                                                            "description": "Descripción de la ficha",
+                                                                            "type": "string",
+                                                                            "example": "Programa de subsidio para vivienda"
+                                                                        }
+                                                                    },
+                                                                    "type": "object",
+                                                                    "nullable": true
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Ingrese el token JWT en el formato: Bearer {token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Beneficios",
+            "description": "API para gestión de beneficios sociales"
+        }
+    ]
+}
