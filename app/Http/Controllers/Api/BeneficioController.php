@@ -27,7 +27,7 @@ class BeneficioController extends Controller
         $resultado = $beneficios->pipe(function ($collection) use ($filtros, $fichas) {
             return $collection
                 ->map(function ($beneficio) use ($filtros, $fichas) {
-                    $filtro = $filtros->firstWhere('id', $beneficio['filtro_id'] ?? null);
+                    $filtro = $filtros->firstWhere('id_programa', $beneficio['id_programa'] ?? null);
                     if (!$filtro) return null;
 
                     if (
@@ -40,6 +40,7 @@ class BeneficioController extends Controller
                     $ficha = $fichas->firstWhere('id', $filtro['ficha_id'] ?? null);
 
                     return [
+                        'id_programa' => $beneficio['id_programa'],
                         'anio' => date('Y', strtotime($beneficio['fecha'])),
                         'monto' => $beneficio['monto'],
                         'ficha' => $ficha,

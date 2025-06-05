@@ -8,5 +8,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
-    Route::get('/beneficios', 'App\Http\Controllers\Api\BeneficioController@index');
+    Route::get('/beneficios-filtrados', 'App\Http\Controllers\Api\BeneficioController@index');
 });
