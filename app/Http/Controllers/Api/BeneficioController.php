@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\BeneficiosService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 class BeneficioController extends Controller
 {
-    public function index()
+    public function index(BeneficiosService $service)
     {
         $beneficios = Cache::remember('beneficios', 60, function () {
             return collect(Http::get('https://run.mocky.io/v3/8f75c4b5-ad90-49bb-bc52-f1fc0b4aad02')->json('data'));
@@ -24,41 +25,9 @@ class BeneficioController extends Controller
         });
 
         
-        $resultado = $beneficios->pipe(function ($collection) use ($filtros, $fichas) {
-            return $collection
-                ->map(function ($beneficio) use ($filtros, $fichas) {
-                    $filtro = $filtros->firstWhere('id_programa', $beneficio['id_programa'] ?? null);
-                    if (!$filtro) return null;
-
-                    if (
-                        $beneficio['monto'] < $filtro['min'] ||
-                        $beneficio['monto'] > $filtro['max']
-                    ) {
-                        return null;
-                    }
-
-                    $ficha = $fichas->firstWhere('id', $filtro['ficha_id'] ?? null);
-
-                    return [
-                        'id_programa' => $beneficio['id_programa'],
-                        'anio' => date('Y', strtotime($beneficio['fecha'])),
-                        'monto' => $beneficio['monto'],
-                        'ficha' => $ficha,
-                    ];
-                })
-                ->filter()
-                ->groupBy('anio')
-                ->map(function ($items, $anio) {
-                    return [
-                        'anio' => (int) $anio,
-                        'monto_total' => $items->sum('monto'),
-                        'numero_beneficios' => $items->count(),
-                        'beneficios' => $items->values(),
-                    ];
-                })
-                ->sortByDesc('anio')
-                ->values();
-        });
+        $filtrados = $service->transformar($beneficios, $filtros, $fichas);
+        $agrupados = $service->agruparPorAnio($filtrados);
+        $resultado = $service->formatear($agrupados);
 
         return response()->json(
             ['code' => 200,'success' => true, 'data' => $resultado],
