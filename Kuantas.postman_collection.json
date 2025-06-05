@@ -1,0 +1,57 @@
+{
+	"info": {
+		"_postman_id": "f604d834-8171-4137-8889-9af1ec6bed28",
+		"name": "Kuantas",
+		"description": "Archivo postman prueba tecnica empresa Kuantaz desarrollador Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31546728"
+	},
+	"item": [
+		{
+			"name": "get-beneficios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_base}}/beneficios-filtrados",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"beneficios-filtrados"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url_base",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		}
+	]
+}
